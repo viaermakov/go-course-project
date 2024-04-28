@@ -1,0 +1,14 @@
+/bin
+/vendor
+/vendor.pb
+/vendor.protogen
+.DS_STORE
+.DS_Store
+/.idea
+/.vscode
+coverage.html
+coverage.out
+bin/
+vendor-proto/
+pkg/
+/.env
