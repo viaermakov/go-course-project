@@ -1,0 +1,41 @@
+{
+  "version": "2",
+  "sql": [
+    {
+      "engine": "postgresql",
+      "schema": "../migrations/common",
+      "gen": {
+        "go": {
+          "package": "ordersrepo",
+          "out": "../internals/repository/ordersrepo/sqlc",
+          "sql_package": "pgx/v5"
+        }
+      },
+      "queries": "../internals/repository/ordersrepo"
+    },
+    {
+      "engine": "postgresql",
+      "schema": "../migrations/stocks",
+      "gen": {
+        "go": {
+          "package": "stocksrepo",
+          "out": "../internals/repository/stocksrepo/sqlc",
+          "sql_package": "pgx/v5"
+        }
+      },
+      "queries": "../internals/repository/stocksrepo"
+    },
+    {
+      "engine": "postgresql",
+      "schema": "../migrations/common",
+      "gen": {
+        "go": {
+          "package": "notifierrepo",
+          "out": "../internals/repository/notifierrepo/sqlc",
+          "sql_package": "pgx/v5"
+        }
+      },
+      "queries": "../internals/repository/notifierrepo"
+    }
+  ]
+}

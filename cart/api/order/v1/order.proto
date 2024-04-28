@@ -1,0 +1,191 @@
+syntax = "proto3";
+
+package route256.ozon.ru.project.loms.pkg.order.v1;
+
+option go_package = "route256.ozon.ru/project/loms/pkg/order/v1;order";
+
+import "validate/validate.proto";
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  info: {
+    title: "Logistics and Order Management System"
+    version: "1.0.0"
+  },
+  host: "localhost:8083"
+};
+
+service Order {
+  rpc OrderCreate(OrderCreateRequest) returns (OrderCreateResponse) {
+    option (google.api.http) = {
+      post: "/v1/order/{user}"
+      body: "items"
+    };
+  };
+
+  rpc OrderInfo(OrderInfoRequest) returns (OrderInfoResponse) {
+    option (google.api.http) = {
+      get: "/v1/order/{orderID}"
+    };
+  };
+
+  rpc OrderPay(OrderPayRequest) returns (OrderPayResponse) {
+    option (google.api.http) = {
+      post: "/v1/order/{orderID}/pay"
+    };
+  };
+
+  rpc OrderCancel(OrderCancelRequest) returns (OrderCancelResponse) {
+    option (google.api.http) = {
+      get: "/v1/order/{orderID}/cancel"
+    };
+  };
+
+  rpc StocksInfo(StocksInfoRequest) returns (StocksInfoResponse) {
+    option (google.api.http) = {
+      get: "/v1/stocks/{sku}"
+    };
+  };
+}
+
+message OrderItem {
+  uint32 sku = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Sku",
+      description: "ID of the product item that the user added to their cart",
+      type: INTEGER,
+      example: "773297411"
+    }
+  ];
+  uint32 count = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Product amount",
+      description: "Product count that the user added to their cart",
+      type: INTEGER,
+      example: "5"
+    },
+    (validate.rules).uint32.gt = 0
+  ];
+}
+
+message OrderCreateRequest {
+  int64 user = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "User ID",
+      description: "ID of the user who creates an order",
+      type: INTEGER,
+      default: "1",
+      example: "\"1\""
+    }
+  ];
+  repeated OrderItem items = 2 [
+    (validate.rules).repeated.min_items = 1
+  ];
+}
+message OrderCreateResponse {
+  int64 orderID = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "OrderID",
+      description: "ID of the order",
+      type: INTEGER,
+      example: "2"
+    }
+  ];
+}
+
+enum OrderStatus {
+  UNSPECIFIED = 0;
+  // Initial status after order creation
+  NEW = 1;
+  // Status of successfully created order
+  AWAITING = 2;
+  // Status of paid order
+  PAYED = 3;
+  // Status of failed order
+  FAILED = 4;
+  // Status of cancelled order
+  CANCELLED = 5;
+}
+message OrderInfoRequest {
+  int64 orderID = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "OrderID",
+      description: "ID of the order",
+      type: INTEGER,
+      example: "2",
+      default: "2"
+    }
+  ];
+}
+message OrderInfoResponse {
+  OrderStatus status = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Order status",
+      example: "1"
+    }
+  ];
+  repeated OrderItem items = 2 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Order items",
+      description: "Order items desc",
+      example: "[{\"sku\": 1, \"count\": 1}]"
+    }
+  ];
+  int64 user = 3 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "User ID",
+      description: "ID of the user who creates an order",
+      type: INTEGER,
+      example: "\"1\""
+    }
+  ];
+}
+
+message OrderPayRequest {
+  int64 orderID = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "OrderID",
+      description: "ID of the order",
+      type: INTEGER,
+      example: "2",
+      default: "2"
+    }
+  ];
+}
+message OrderPayResponse {}
+
+message OrderCancelRequest {
+  int64 orderID = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "OrderID",
+      description: "ID of the order",
+      type: INTEGER,
+      example: "2",
+      default: "2"
+    }
+  ];
+}
+message OrderCancelResponse {}
+
+message StocksInfoRequest {
+  uint32 sku = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Sku",
+      description: "ID of the product item that the user added to their cart",
+      type: INTEGER,
+      example: "773297411"
+      default: "773297411"
+    }
+  ];
+}
+message StocksInfoResponse {
+  uint64 count = 1 [
+    (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {
+      title: "Count",
+      description: "Amount of stocks that available for buying",
+      type: INTEGER,
+      example: "1"
+    }
+  ];
+}

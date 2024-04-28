@@ -1,0 +1,406 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "title": "Logistics and Order Management System",
+    "version": "1.0.0"
+  },
+  "tags": [
+    {
+      "name": "Order"
+    }
+  ],
+  "host": "localhost:8083",
+  "consumes": [
+    "application/json"
+  ],
+  "produces": [
+    "application/json"
+  ],
+  "paths": {
+    "/v1/order/{orderID}": {
+      "get": {
+        "operationId": "Order_OrderInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1OrderInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orderID",
+            "description": "ID of the order",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64",
+            "default": "2"
+          }
+        ],
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/v1/order/{orderID}/cancel": {
+      "get": {
+        "operationId": "Order_OrderCancel",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1OrderCancelResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orderID",
+            "description": "ID of the order",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64",
+            "default": "2"
+          }
+        ],
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/v1/order/{orderID}/pay": {
+      "post": {
+        "operationId": "Order_OrderPay",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1OrderPayResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orderID",
+            "description": "ID of the order",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64",
+            "default": "2"
+          }
+        ],
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/v1/order/{user}": {
+      "post": {
+        "operationId": "Order_OrderCreate",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1OrderCreateResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "user",
+            "description": "ID of the user who creates an order",
+            "in": "path",
+            "required": true,
+            "type": "string",
+            "format": "int64",
+            "default": "1"
+          },
+          {
+            "name": "items",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "$ref": "#/definitions/v1OrderItem"
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/v1/orders": {
+      "post": {
+        "operationId": "Order_OrdersList",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1OrdersListResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "orderIds",
+            "in": "body",
+            "required": true,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "format": "int64"
+              }
+            }
+          }
+        ],
+        "tags": [
+          "Order"
+        ]
+      }
+    },
+    "/v1/stocks/{sku}": {
+      "get": {
+        "operationId": "Order_StocksInfo",
+        "responses": {
+          "200": {
+            "description": "A successful response.",
+            "schema": {
+              "$ref": "#/definitions/v1StocksInfoResponse"
+            }
+          },
+          "default": {
+            "description": "An unexpected error response.",
+            "schema": {
+              "$ref": "#/definitions/rpcStatus"
+            }
+          }
+        },
+        "parameters": [
+          {
+            "name": "sku",
+            "description": "ID of the product item that the user added to their cart",
+            "in": "path",
+            "required": true,
+            "type": "integer",
+            "format": "int64",
+            "default": "773297411"
+          }
+        ],
+        "tags": [
+          "Order"
+        ]
+      }
+    }
+  },
+  "definitions": {
+    "orderv1OrderInfo": {
+      "type": "object",
+      "properties": {
+        "orderID": {
+          "type": "integer",
+          "format": "int64",
+          "example": 2,
+          "description": "ID of the order",
+          "title": "OrderID"
+        },
+        "items": {
+          "type": "array",
+          "example": [
+            {
+              "sku": 1,
+              "count": 1
+            }
+          ],
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1OrderItem"
+          },
+          "description": "Order items desc",
+          "title": "Order items"
+        },
+        "user": {
+          "type": "integer",
+          "format": "int64",
+          "example": "1",
+          "description": "ID of the user who creates an order",
+          "title": "User ID"
+        }
+      }
+    },
+    "protobufAny": {
+      "type": "object",
+      "properties": {
+        "@type": {
+          "type": "string"
+        }
+      },
+      "additionalProperties": {}
+    },
+    "rpcStatus": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/protobufAny"
+          }
+        }
+      }
+    },
+    "v1OrderCancelResponse": {
+      "type": "object"
+    },
+    "v1OrderCreateResponse": {
+      "type": "object",
+      "properties": {
+        "orderID": {
+          "type": "integer",
+          "format": "int64",
+          "example": 2,
+          "description": "ID of the order",
+          "title": "OrderID"
+        }
+      }
+    },
+    "v1OrderInfoResponse": {
+      "type": "object",
+      "properties": {
+        "status": {
+          "$ref": "#/definitions/v1OrderStatus",
+          "example": 1,
+          "title": "Order status"
+        },
+        "items": {
+          "type": "array",
+          "example": [
+            {
+              "sku": 1,
+              "count": 1
+            }
+          ],
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/v1OrderItem"
+          },
+          "description": "Order items desc",
+          "title": "Order items"
+        },
+        "user": {
+          "type": "integer",
+          "format": "int64",
+          "example": "1",
+          "description": "ID of the user who creates an order",
+          "title": "User ID"
+        }
+      }
+    },
+    "v1OrderItem": {
+      "type": "object",
+      "properties": {
+        "sku": {
+          "type": "integer",
+          "format": "int64",
+          "example": 773297411,
+          "description": "ID of the product item that the user added to their cart",
+          "title": "Sku"
+        },
+        "count": {
+          "type": "integer",
+          "format": "int64",
+          "example": 5,
+          "description": "Product count that the user added to their cart",
+          "title": "Product amount"
+        }
+      }
+    },
+    "v1OrderPayResponse": {
+      "type": "object"
+    },
+    "v1OrderStatus": {
+      "type": "string",
+      "enum": [
+        "UNSPECIFIED",
+        "NEW",
+        "AWAITING",
+        "PAYED",
+        "FAILED",
+        "CANCELLED"
+      ],
+      "default": "UNSPECIFIED",
+      "title": "- NEW: Initial status after order creation\n - AWAITING: Status of successfully created order\n - PAYED: Status of paid order\n - FAILED: Status of failed order\n - CANCELLED: Status of cancelled order"
+    },
+    "v1OrdersListResponse": {
+      "type": "object",
+      "properties": {
+        "orders": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "$ref": "#/definitions/orderv1OrderInfo"
+          },
+          "description": "User's orders",
+          "title": "Orders"
+        }
+      }
+    },
+    "v1StocksInfoResponse": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "format": "uint64",
+          "example": 1,
+          "description": "Amount of stocks that available for buying",
+          "title": "Count"
+        }
+      }
+    }
+  }
+}
